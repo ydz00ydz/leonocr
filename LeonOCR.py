@@ -4,7 +4,6 @@ import base64
 import ddddocr
 from io import BytesIO
 from PIL import Image
-from fastapi.responses import HTMLResponse
 import logging
 
 '''
