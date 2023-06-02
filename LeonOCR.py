@@ -23,10 +23,10 @@ async def general_captcha(ImageBase64: str = Body(..., title='验证码图片Bse
         base64_data = base64.b64decode(ImageBase64)
         ocr = ddddocr.DdddOcr(show_ad=False)
         res = ocr.classification(base64_data)
-        return {"code":200,"result": res}
+        return {"code": 200, "result": res}
     except Exception as ex:
         logging.exception(ex)
-        return {"code":500,"msg":str(ex)}
+        return {"code": 500, "msg": str(ex)}
 
 
 @app.post("/arithmetic_captcha", summary='识别算术验证码', description='算术题验证码识别，上传图片的Base64编码，提供两个返回，自行取值分割文本并识别',
@@ -51,19 +51,18 @@ async def arithmetic_captcha(ImageBase64: str = Body(..., title='验证码图片
         if '÷' in res:
             zhi = int(res.split('÷')[0]) / int(res.split('÷')[1][:-1])
 
-        return {"code":200,
+        return {"code": 200,
                 "solution_result": zhi,
                 "raw_result": res
                 }
     except Exception as ex:
         logging.exception(ex)
-        return {"code":500,"msg":str(ex)}
-
+        return {"code": 500, "msg": str(ex)}
 
 
 @app.post("/slide_alone_gap", summary='缺口为滑动的单独图片，返回坐标', description='识别模型1：缺口图片为单独图片', tags=['滑块验证码识别'])
 async def slide_alone_gap(Gap_ImageBase64: str = Body(..., title='滑块缺口图片的Bse64文本', embed=True),
-                              Background_ImageBase64: str = Body(..., title='背景图片的Bse64文本', embed=True)):
+                          Background_ImageBase64: str = Body(..., title='背景图片的Bse64文本', embed=True)):
     ocr = ddddocr.DdddOcr(show_ad=False)
     res = ocr.slide_match(base64.b64decode(Gap_ImageBase64), base64.b64decode(Background_ImageBase64),
                           simple_target=True)
@@ -73,7 +72,7 @@ async def slide_alone_gap(Gap_ImageBase64: str = Body(..., title='滑块缺口�
 @app.post("/slide_comparison", summary='缺口原图和完整原图识别，无单独滑动的缺口图片，返回坐标', description='识别模型2：一张为有缺口原图，一张为完整原图',
           tags=['滑块验证码识别'])
 async def slide_comparison(HaveGap_ImageBase64: str = Body(..., title='拥有缺口图片的Bse64文本', embed=True),
-                                Full_ImageBase64: str = Body(..., title='完整背景图片的Bse64文本', embed=True)):
+                           Full_ImageBase64: str = Body(..., title='完整背景图片的Bse64文本', embed=True)):
     ocr = ddddocr.DdddOcr(det=False, ocr=False)
     res = ocr.slide_comparison(base64.b64decode(HaveGap_ImageBase64), base64.b64decode(Full_ImageBase64))
     return {"result": res}
