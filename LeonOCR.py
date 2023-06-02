@@ -17,8 +17,8 @@ pip install ddddocr
 app = FastAPI(title='OCR开发文档', description='通用验证码识别-Leon', version="1.0.0")
 
 
-@app.post("/identify_GeneralCAPTCHA", summary='识别图片内文字', description='普通图片验证码识别，上传图片的Base64编码', tags=['图片验证码识别'])
-async def identify_GeneralCAPTCHA(ImageBase64: str = Body(..., title='验证码图片Bse64文本', embed=True)):
+@app.post("/general_captcha", summary='识别图片内文字', description='普通图片验证码识别，上传图片的Base64编码', tags=['图片验证码识别'])
+async def general_captcha(ImageBase64: str = Body(..., title='验证码图片Bse64文本', embed=True)):
     try:
         base64_data = base64.b64decode(ImageBase64)
         ocr = ddddocr.DdddOcr(show_ad=False)
@@ -29,9 +29,9 @@ async def identify_GeneralCAPTCHA(ImageBase64: str = Body(..., title='验证码�
         return {"code":500,"msg":str(ex)}
 
 
-@app.post("/identify_ArithmeticCAPTCHA", summary='识别算术验证码', description='算术题验证码识别，上传图片的Base64编码，提供两个返回，自行取值分割文本并识别',
+@app.post("/arithmetic_captcha", summary='识别算术验证码', description='算术题验证码识别，上传图片的Base64编码，提供两个返回，自行取值分割文本并识别',
           tags=['图片验证码识别'])
-async def identify_ArithmeticCAPTCHA(ImageBase64: str = Body(..., title='验证码图片Bse64文本', embed=True)):
+async def arithmetic_captcha(ImageBase64: str = Body(..., title='验证码图片Bse64文本', embed=True)):
     try:
         base64_data = base64.b64decode(ImageBase64)
         ocr = ddddocr.DdddOcr(show_ad=False)
@@ -61,8 +61,8 @@ async def identify_ArithmeticCAPTCHA(ImageBase64: str = Body(..., title='验证�
 
 
 
-@app.post("/SliderMode_AloneGap", summary='缺口为滑动的单独图片，返回坐标', description='识别模型1：缺口图片为单独图片', tags=['滑块验证码识别'])
-async def SliderMode_AloneGap(Gap_ImageBase64: str = Body(..., title='滑块缺口图片的Bse64文本', embed=True),
+@app.post("/slide_alone_gap", summary='缺口为滑动的单独图片，返回坐标', description='识别模型1：缺口图片为单独图片', tags=['滑块验证码识别'])
+async def slide_alone_gap(Gap_ImageBase64: str = Body(..., title='滑块缺口图片的Bse64文本', embed=True),
                               Background_ImageBase64: str = Body(..., title='背景图片的Bse64文本', embed=True)):
     ocr = ddddocr.DdddOcr(show_ad=False)
     res = ocr.slide_match(base64.b64decode(Gap_ImageBase64), base64.b64decode(Background_ImageBase64),
@@ -70,17 +70,17 @@ async def SliderMode_AloneGap(Gap_ImageBase64: str = Body(..., title='滑块缺�
     return {"result": res}
 
 
-@app.post("/SliderMode_Comparison", summary='缺口原图和完整原图识别，无单独滑动的缺口图片，返回坐标', description='识别模型2：一张为有缺口原图，一张为完整原图',
+@app.post("/slide_comparison", summary='缺口原图和完整原图识别，无单独滑动的缺口图片，返回坐标', description='识别模型2：一张为有缺口原图，一张为完整原图',
           tags=['滑块验证码识别'])
-async def SliderMode_Comparison(HaveGap_ImageBase64: str = Body(..., title='拥有缺口图片的Bse64文本', embed=True),
+async def slide_comparison(HaveGap_ImageBase64: str = Body(..., title='拥有缺口图片的Bse64文本', embed=True),
                                 Full_ImageBase64: str = Body(..., title='完整背景图片的Bse64文本', embed=True)):
     ocr = ddddocr.DdddOcr(det=False, ocr=False)
     res = ocr.slide_comparison(base64.b64decode(HaveGap_ImageBase64), base64.b64decode(Full_ImageBase64))
     return {"result": res}
 
 
-@app.post("/ClickChoice_Txt_CAPTCHA", summary='文字点选验证码识别，返回坐标', description='点选识别返回坐标', tags=['点选类验证码'])
-async def ClickChoice_CAPTCHA(ClickChoice_ImageBase64: str = Body(..., title='点选图片的Base64编码', embed=True)):
+@app.post("/click_word", summary='文字点选验证码识别，返回坐标', description='点选识别返回坐标', tags=['点选类验证码'])
+async def click_word(ClickChoice_ImageBase64: str = Body(..., title='点选图片的Base64编码', embed=True)):
     ocr1 = ddddocr.DdddOcr(show_ad=False)
     ocr2 = ddddocr.DdddOcr(det=True, show_ad=False)
 
